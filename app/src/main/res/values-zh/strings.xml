@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TimeRecorder</string>
+    <string name="page_title_punch">打卡</string>
+    <string name="page_title_record">时间记录</string>
+    <string name="page_title_report">时间报告</string>
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">TimeRecorder</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+    <string name="title_activity_time_recorder">TimeRecorder</string>
+    <string name="action_settings">Settings</string>
+    <string name="section_format">Hello World from section: %1$d</string>
+    <string name="page_title_record">Time Record</string>
+    <string name="page_title_punch">Punch The Clock</string>
+    <string name="page_title_report">Time Report</string>
+</resources>
