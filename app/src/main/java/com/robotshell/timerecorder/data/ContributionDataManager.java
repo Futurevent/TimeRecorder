@@ -2,6 +2,7 @@ package com.robotshell.timerecorder.data;
 
 import android.content.Context;
 
+import com.robotshell.timerecorder.bean.Contribution;
 import com.robotshell.timerecorder.bean.Day;
 import com.snappydb.DB;
 import com.snappydb.DBFactory;
@@ -43,22 +44,33 @@ public class ContributionDataManager {
         }
     }
 
-    public void punchOnce() {
+    public void punchOnce(long duration) {
         String time = dataFormat.format(new Date());
         Day day;
+
         try {
             if (daysDB.exists(time)) {
                 day = daysDB.getObject(time, Day.class);
-                day.contribution++;
+                day.contributionCount++;
             } else {
                 day = new Day();
                 day.time = time;
-                day.contribution++;
+                day.contributionCount++;
             }
+
+            if (duration != 0) {
+                Contribution contribution = new Contribution(Contribution.TYPE_LIFE, duration);
+                day.addContribution(contribution);
+            }
+
             daysDB.put(time, day);
         } catch (SnappydbException e) {
             e.printStackTrace();
         }
+    }
+
+    public void punchOnce() {
+        punchOnce(0);
     }
 
     public int getContributionValue(String time) {
@@ -72,7 +84,7 @@ public class ContributionDataManager {
         }
 
         if (day != null) {
-            return day.contribution;
+            return day.contributionCount;
         } else {
             return 0;
         }

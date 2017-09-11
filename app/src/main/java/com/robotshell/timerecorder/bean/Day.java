@@ -1,6 +1,8 @@
 package com.robotshell.timerecorder.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Administrator on 2017/1/13.
@@ -28,7 +30,9 @@ public class Day implements Serializable {
     /**
      * 贡献次数，默认0
      **/
-    public int contribution = 0;
+    public int contributionCount = 0;
+
+    public ArrayList<Contribution> contributions = new ArrayList<>();
     /**
      * 默认颜色,根据提交次数改变
      **/
@@ -42,10 +46,13 @@ public class Day implements Serializable {
     public float endX;
     public float endY;
 
+    public void addContribution(Contribution contribution) {
+        contributions.add(contribution);
+    }
 
     @Override
     public String toString() {
         //这里直接在弹出框中显示
-        return "" + year + "年" + month + "月" + date + "日周" + week + "," + contribution + "次";
+        return "" + year + "年" + month + "月" + date + "日周" + week + "," + contributionCount + "次";
     }
 }

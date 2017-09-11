@@ -4,4 +4,12 @@
         <attr name="cb_color" format="color" />
         <attr name="cb_pressedRingWidth" format="dimension" />
     </declare-styleable>
+
+    <declare-styleable name="ContributionView">
+        <attr name="display_mode">
+            <enum name="month" value="0" />
+            <enum name="season" value="1" />
+            <enum name="year" value="2" />
+        </attr>
+    </declare-styleable>
 </resources>

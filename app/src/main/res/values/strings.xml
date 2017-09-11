@@ -9,7 +9,8 @@
     <string name="page_title_record">Time Record</string>
     <string name="page_title_punch">Punch The Clock</string>
     <string name="page_title_report">Time Report</string>
-    <string name="album_title">...Like Clockwork</string>
-    <string name="artist_name">Queens of the Stone Age</string>
+    <string name="album_title">\u3000\u3000一个人越知道时间的价值，越倍觉失时的痛苦！</string>
+    <string name="artist_name">--但丁</string>
+    <string name="stop_instruction">点击停止，记录本次结果</string>
     <string name="song_title">I Appear Missing</string>
 </resources>

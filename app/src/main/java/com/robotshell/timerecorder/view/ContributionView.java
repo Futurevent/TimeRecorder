@@ -1,6 +1,7 @@
 package com.robotshell.timerecorder.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RemoteViews.RemoteView;
 
+import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.data.DateFactory;
 import com.robotshell.timerecorder.utils.UIUtils;
 import com.robotshell.timerecorder.bean.Day;
@@ -26,6 +28,10 @@ import java.util.List;
 
 @RemoteView
 public class ContributionView extends View {
+    private static final int DISPLAY_MODE_MONTH = 0;
+    private static final int DISPLAY_MODE_SEASON = 1;
+    private static final int DISPLAY_MODE_YEAR = 2;
+
     private static final String TAG = "ContributionView";
     /**
      * 灰色方格的默认颜色
@@ -63,6 +69,8 @@ public class ContributionView extends View {
      **/
     private int column = 0;
 
+    private int dispalyMode = DISPLAY_MODE_YEAR;
+
     private List<Day> mDays;//一年中所有的天
     private Paint boxPaint;//方格画笔
     private Paint textPaint;//文字画笔
@@ -87,12 +95,18 @@ public class ContributionView extends View {
     public ContributionView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         Log.d(TAG, "ContributionView() called with: context = [" + context + "], attrs = [" + attrs + "], defStyleAttr = [" + defStyleAttr + "]");
-        initView();
+        initView(context, attrs);
     }
 
-    public void initView() {
+    public void initView(Context context, AttributeSet attrs) {
+        if (attrs != null) {
+            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleButton);
+            dispalyMode = a.getInt(R.styleable.ContributionView_display_mode, dispalyMode);
+            a.recycle();
+        }
+
         Log.d(TAG, "initView() called");
-        mDays = DateFactory.getDays(9);
+        mDays = DateFactory.getDays();
         //方格画笔
         boxPaint = new Paint();
         boxPaint.setStyle(Paint.Style.FILL);
@@ -143,7 +157,7 @@ public class ContributionView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mDays = DateFactory.getDays(9);
+        mDays = DateFactory.getDays();
         Log.d(TAG, "onDraw() called with: canvas = [" + canvas + "]");
         column = 0;
         canvas.save();
@@ -191,7 +205,7 @@ public class ContributionView extends View {
             day.startY = startY;
             day.endX = endX;
             day.endY = endY;
-            day.colour = getColour(day.contribution);
+            day.colour = getColour(day.contributionCount);
             //给画笔设置当前天的颜色
             boxPaint.setColor(day.colour);
             canvas.drawRect(startX, startY, endX, endY, boxPaint);
@@ -276,7 +290,7 @@ public class ContributionView extends View {
     }
 
     public void refreshView() {
-        mDays = DateFactory.getDays(9);
+        mDays = DateFactory.getDays();
         invalidate();
     }
 
@@ -337,7 +351,7 @@ public class ContributionView extends View {
         //先找到是第几天，为了方便不做参数检测了
         for (Day d : mDays) {
             if (d.year == year && d.month == month && d.date == day) {
-                d.contribution = contribution;
+                d.contributionCount = contribution;
                 d.colour = getColour(contribution);
                 break;
             }

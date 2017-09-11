@@ -87,7 +87,7 @@ public class DateFactory {
             day.month = monthAndDay[0];
             day.date = monthAndDay[1];
             day.time = String.format(TIME_FORMAT, day.year, day.month, day.date);
-            day.contribution = ContributionDataManager.getInstance().getContributionValue(day.time);
+            day.contributionCount = ContributionDataManager.getInstance().getContributionValue(day.time);
             //记录下昨天是周几并+1
             week = day.week;
             week++;
@@ -121,7 +121,7 @@ public class DateFactory {
             day.month = monthAndDay[0];
             day.date = monthAndDay[1];
             day.time = String.format(TIME_FORMAT, day.year, day.month, day.date);
-            day.contribution = ContributionDataManager.getInstance().getContributionValue(day.time);
+            day.contributionCount = ContributionDataManager.getInstance().getContributionValue(day.time);
             //记录下昨天是周几并+1
             lastWeekday = day.week;
             lastWeekday++;
