@@ -92,7 +92,7 @@ public class ContributionView extends View {
 
     public void initView() {
         Log.d(TAG, "initView() called");
-        mDays = DateFactory.getDays();
+        mDays = DateFactory.getDays(9);
         //方格画笔
         boxPaint = new Paint();
         boxPaint.setStyle(Paint.Style.FILL);
@@ -124,9 +124,9 @@ public class ContributionView extends View {
         int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
         int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
         if (width != 0 && width <= height) {
-            boxSide = (width - 4 * DEFAULT_PADDING - (int) textPaint.measureText(weeks[0])) / 52 - boxInterval;
+            boxSide = (width - 4 * DEFAULT_PADDING - (int) textPaint.measureText(weeks[0])) / (int) Math.ceil(mDays.size() / 7) - boxInterval;
         } else if (width != 0 && width > height) {
-            boxSide = (width - 6 * DEFAULT_PADDING - (int) textPaint.measureText(weeks[0])) / 52 - boxInterval;
+            boxSide = (width - 6 * DEFAULT_PADDING - (int) textPaint.measureText(weeks[0])) / (int) Math.ceil(mDays.size() / 7) - boxInterval;
         }
 
         setMeasuredDimension(width, (2 * padding + (boxSide + boxInterval) * 7));
@@ -143,7 +143,7 @@ public class ContributionView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mDays = DateFactory.getDays();
+        mDays = DateFactory.getDays(9);
         Log.d(TAG, "onDraw() called with: canvas = [" + canvas + "]");
         column = 0;
         canvas.save();
@@ -276,7 +276,7 @@ public class ContributionView extends View {
     }
 
     public void refreshView() {
-        mDays = DateFactory.getDays();
+        mDays = DateFactory.getDays(9);
         invalidate();
     }
 

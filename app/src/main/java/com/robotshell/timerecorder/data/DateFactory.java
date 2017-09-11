@@ -64,6 +64,39 @@ public class DateFactory {
         return getDays(year, (week - 1 == 0) ? 7 : week - 1);
     }
 
+    public static List<Day> getDays(int month) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, month);
+        cal.set(Calendar.DATE, 1);
+
+        int year = cal.get(Calendar.YEAR);
+        int week = cal.get(Calendar.DAY_OF_WEEK);
+
+        List<Day> days = new ArrayList<>();
+
+        boolean isLeapYear = isLeapYear(year);
+        int dayNum = isLeapYear ? leapMonthMap.get(month) : monthMap.get(month);
+        Day day;
+        for (int i = 0; i < dayNum; i++) {
+            day = new Day();
+            day.year = year;
+            //计算当天为周几,如果大于7就重置1
+            day.week = week <= 7 ? week : 1;
+            //计算当天为几月几号
+            int[] monthAndDay = getMonthAndDay(isLeapYear, i);
+            day.month = monthAndDay[0];
+            day.date = monthAndDay[1];
+            day.time = String.format(TIME_FORMAT, day.year, day.month, day.date);
+            day.contribution = ContributionDataManager.getInstance().getContributionValue(day.time);
+            //记录下昨天是周几并+1
+            week = day.week;
+            week++;
+            days.add(day);
+        }
+
+        return days;
+    }
+
     /**
      * 输入年份和1月1日是周几
      * 闰年为366天,平年为365天
@@ -78,7 +111,7 @@ public class DateFactory {
         int dayNum = isLeapYear ? 366 : 365;
         Day day;
         int lastWeekday = weekday;
-        for (int i = 1; i <= dayNum; i++) {
+        for (int i = 0; i <= dayNum; i++) {
             day = new Day();
             day.year = year;
             //计算当天为周几,如果大于7就重置1
