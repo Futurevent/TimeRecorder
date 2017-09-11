@@ -31,6 +31,7 @@ public class PunchFragment extends BaseFragment {
             @Override
             public void onClick(View v) {
                 punchOnce();
+                punchButton.setClickable(false);
             }
         });
         return rootView;
