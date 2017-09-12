@@ -4,4 +4,10 @@
     <string name="page_title_punch">打卡</string>
     <string name="page_title_record">时间记录</string>
     <string name="page_title_report">时间报告</string>
+    <string name="cancel_confirm">是的，取消！</string>
+    <string name="cancel_confirm_content">这次时间将不会被记录！</string>
+    <string name="cancel_confirm_title">你确定吗？</string>
+    <string name="canceled">已取消</string>
+    <string name="canceled_content">你的这次工作时间已被取消记录！</string>
+    <string name="canceled_ok">确定</string>
 </resources>

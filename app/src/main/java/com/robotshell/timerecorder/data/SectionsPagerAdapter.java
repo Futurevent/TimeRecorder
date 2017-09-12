@@ -9,6 +9,7 @@ import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.fragment.BaseFragment;
 import com.robotshell.timerecorder.fragment.PunchFragment;
 import com.robotshell.timerecorder.fragment.RecordFragment;
+import com.robotshell.timerecorder.fragment.ReportFragment;
 
 import java.util.HashMap;
 
@@ -33,7 +34,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                     fragment = PunchFragment.newInstance();
                     break;
                 case 2:
-                    fragment = PunchFragment.newInstance();
+                    fragment = ReportFragment.newInstance();
                     break;
             }
             fragments.put(position, fragment);

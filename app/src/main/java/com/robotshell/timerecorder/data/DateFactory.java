@@ -64,13 +64,26 @@ public class DateFactory {
         return getDays(year, (week - 1 == 0) ? 7 : week - 1);
     }
 
-    public static List<Day> getDays(int month) {
+    public static List<Day> getDaysForSeason(int season) {
+        int month = 1 + (season * 3);
+
         Calendar cal = Calendar.getInstance();
-        cal.set(Calendar.MONTH, month);
+        List<Day> days = new ArrayList<>();
+        days.addAll(getDaysForMonth(month));
+        days.addAll(getDaysForMonth(++month));
+        days.addAll(getDaysForMonth(++month));
+
+        return days;
+    }
+
+    public static List<Day> getDaysForMonth(int month) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DATE, 1);
 
         int year = cal.get(Calendar.YEAR);
         int week = cal.get(Calendar.DAY_OF_WEEK);
+        week = (week - 1 == 0) ? 7 : week - 1;
 
         List<Day> days = new ArrayList<>();
 
@@ -82,10 +95,8 @@ public class DateFactory {
             day.year = year;
             //计算当天为周几,如果大于7就重置1
             day.week = week <= 7 ? week : 1;
-            //计算当天为几月几号
-            int[] monthAndDay = getMonthAndDay(isLeapYear, i);
-            day.month = monthAndDay[0];
-            day.date = monthAndDay[1];
+            day.month = month;
+            day.date = i + 1;
             day.time = String.format(TIME_FORMAT, day.year, day.month, day.date);
             day.contributionCount = ContributionDataManager.getInstance().getContributionValue(day.time);
             //记录下昨天是周几并+1

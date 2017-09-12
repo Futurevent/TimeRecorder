@@ -14,9 +14,10 @@ import android.view.View;
 import android.widget.RemoteViews.RemoteView;
 
 import com.robotshell.timerecorder.R;
-import com.robotshell.timerecorder.data.DateFactory;
-import com.robotshell.timerecorder.utils.UIUtils;
 import com.robotshell.timerecorder.bean.Day;
+import com.robotshell.timerecorder.data.DateFactory;
+import com.robotshell.timerecorder.utils.DataUtils;
+import com.robotshell.timerecorder.utils.UIUtils;
 
 import java.util.List;
 
@@ -69,7 +70,7 @@ public class ContributionView extends View {
      **/
     private int column = 0;
 
-    private int dispalyMode = DISPLAY_MODE_YEAR;
+    private int displayMode = DISPLAY_MODE_YEAR;
 
     private List<Day> mDays;//一年中所有的天
     private Paint boxPaint;//方格画笔
@@ -100,8 +101,8 @@ public class ContributionView extends View {
 
     public void initView(Context context, AttributeSet attrs) {
         if (attrs != null) {
-            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleButton);
-            dispalyMode = a.getInt(R.styleable.ContributionView_display_mode, dispalyMode);
+            final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContributionView);
+            displayMode = a.getInt(R.styleable.ContributionView_display_mode, displayMode);
             a.recycle();
         }
 
@@ -110,42 +111,71 @@ public class ContributionView extends View {
         //方格画笔
         boxPaint = new Paint();
         boxPaint.setStyle(Paint.Style.FILL);
-        boxPaint.setStrokeWidth(2);
+        boxPaint.setStrokeWidth(1);
         boxPaint.setColor(DEFAULT_BOX_COLOUR);
         boxPaint.setAntiAlias(true);
         //文字画笔
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setColor(Color.GRAY);
-        textPaint.setTextSize(12);
+        textPaint.setTextSize(16);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
         infoPaint = new Paint();
         infoPaint.setStyle(Paint.Style.FILL);
         infoPaint.setColor(0xCC888888);
-        infoPaint.setTextSize(12);
+        infoPaint.setTextSize(16);
         infoPaint.setAntiAlias(true);
         //将默认值转换px
-        padding = UIUtils.dp2px(getContext(), padding);
-        boxSide = UIUtils.dp2px(getContext(), boxSide);
+        padding = UIUtils.dp2px(getContext(), DEFAULT_PADDING);
+//        boxSide = UIUtils.dp2px(getContext(), boxSide);
 
         metrics = textPaint.getFontMetrics();
     }
 
+    private void getDaysByDisplayMode() {
+        switch (displayMode) {
+            case DISPLAY_MODE_MONTH:
+                mDays = DateFactory.getDaysForMonth(DataUtils.getCurMonth());
+                break;
+            case DISPLAY_MODE_SEASON:
+                mDays = DateFactory.getDaysForSeason(DataUtils.getCurSeason());
+                break;
+            default:
+                mDays = DateFactory.getDays();
+        }
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        getDaysByDisplayMode();
         Log.d(TAG, "onMeasure() called with: widthMeasureSpec = [" + widthMeasureSpec + "], heightMeasureSpec = [" + heightMeasureSpec + "]");
-        int width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
-        int height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+        float width = getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec);
+        float height = getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec);
+        float viewWidth = width;
+        float viewHeight = height;
+
         if (width != 0 && width <= height) {
-            boxSide = (width - 4 * DEFAULT_PADDING - (int) textPaint.measureText(weeks[0])) / (int) Math.ceil(mDays.size() / 7) - boxInterval;
+            boxSide = ((int) width - (int) textPaint.measureText(weeks[0])) / (int) Math.ceil(mDays.size() / 7) - boxInterval;
+            viewHeight = (2 * padding + (boxSide + boxInterval) * 7);
+            if (viewHeight > height) {
+                boxSide = (int) (height / viewHeight * boxSide);
+                viewHeight = (2 * padding + (boxSide + boxInterval) * 7);
+            }
         } else if (width != 0 && width > height) {
-            boxSide = (width - 6 * DEFAULT_PADDING - (int) textPaint.measureText(weeks[0])) / (int) Math.ceil(mDays.size() / 7) - boxInterval;
+            boxSide = ((int) height - 2 * padding - (int) textPaint.measureText(months[0])) / 7 - boxInterval;
+            viewWidth = 2 * padding
+                    + (boxSide + boxInterval) * (int) Math.ceil(mDays.size() / 7)
+                    + (int) textPaint.measureText(weeks[0]);
+            if (viewWidth > width) {
+                boxSide = (int) (width / viewWidth * boxSide);
+                viewWidth = 2 * padding
+                        + (boxSide + boxInterval) * (int) Math.ceil(mDays.size() / 7)
+                        + (int) textPaint.measureText(weeks[0]);
+            }
         }
 
-        setMeasuredDimension(width, (2 * padding + (boxSide + boxInterval) * 7));
-
-        padding = UIUtils.dp2px(getContext(), DEFAULT_PADDING);
+        setMeasuredDimension((int) viewWidth, (int) viewHeight);
     }
 
     @Override
@@ -157,7 +187,6 @@ public class ContributionView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mDays = DateFactory.getDays();
         Log.d(TAG, "onDraw() called with: canvas = [" + canvas + "]");
         column = 0;
         canvas.save();
@@ -174,16 +203,17 @@ public class ContributionView extends View {
      * @param canvas 画布
      */
     private void drawBox(Canvas canvas) {
+        boxPaint.setStyle(Paint.Style.FILL);
         Log.d(TAG, "drawBox() called with: canvas = [" + canvas + "]");
         //方格的左上右下坐标
         float startX, startY, endX, endY;
         //起始月份为1月
-        int month = 1;
+        int month = mDays.get(0).month;
         for (int i = 0; i < mDays.size(); i++) {
             Day day = mDays.get(i);
             if (i == 0) {
                 //画1月的文本标记,坐标应该是x=padding,y=padding-boxSide/2(间隙),y坐标在表格上面一点
-                canvas.drawText(months[0], padding, padding - boxSide / 2, textPaint);
+                canvas.drawText(months[month - 1], padding, padding - boxSide / 2, textPaint);
             }
             if (day.week == 1 && i != 0) {
                 //如果当天是周1，那么说明增加了一列
@@ -209,6 +239,10 @@ public class ContributionView extends View {
             //给画笔设置当前天的颜色
             boxPaint.setColor(day.colour);
             canvas.drawRect(startX, startY, endX, endY, boxPaint);
+
+            if (day.month == DataUtils.getCurMonth() && day.date == DataUtils.getCurDay()) {
+                boxPaint.setStyle(Paint.Style.STROKE);
+            }
         }
         boxPaint.setColor(DEFAULT_BOX_COLOUR);//恢复默认颜色
     }
@@ -241,6 +275,7 @@ public class ContributionView extends View {
      */
     private void drawTag(Canvas canvas) {
         //首先计算出两个文本的长度
+        boxPaint.setStyle(Paint.Style.FILL);
         float moreLength = textPaint.measureText("More");
         float lessLength = textPaint.measureText("Less");
         //画 More 文本,x坐标=padding+（列数+1）*（方格边长+方格间隙）-一个方格间隙-文本长度
@@ -290,7 +325,7 @@ public class ContributionView extends View {
     }
 
     public void refreshView() {
-        mDays = DateFactory.getDays();
+        getDaysByDisplayMode();
         invalidate();
     }
 

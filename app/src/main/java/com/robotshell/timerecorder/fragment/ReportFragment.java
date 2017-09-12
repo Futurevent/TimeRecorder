@@ -12,13 +12,10 @@ import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.data.ContributionDataManager;
 import com.robotshell.timerecorder.view.ChronometerPersist;
 import com.robotshell.timerecorder.view.CircleButton;
-import com.robotshell.timerecorder.view.ContributionView;
 import com.truizlop.fabreveallayout.FABRevealLayout;
 import com.truizlop.fabreveallayout.OnRevealChangeListener;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
-public class PunchFragment extends BaseFragment {
+public class ReportFragment extends BaseFragment {
     private final static String PREFERENCE_NAME = "chronometer_persist";
 
     private CircleButton punchButton;
@@ -26,11 +23,10 @@ public class PunchFragment extends BaseFragment {
     private FABRevealLayout fabRevealLayout;
     private ChronometerPersist chronometerPersist;
     private SharedPreferences sharedPreferences;
-    private ContributionView contributionView;
 
     private ContributionDataManager contributionDataManager;
 
-    public PunchFragment() {
+    public ReportFragment() {
         contributionDataManager = ContributionDataManager.getInstance();
     }
 
@@ -41,8 +37,8 @@ public class PunchFragment extends BaseFragment {
         sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
-    public static PunchFragment newInstance() {
-        PunchFragment fragment = new PunchFragment();
+    public static ReportFragment newInstance() {
+        ReportFragment fragment = new ReportFragment();
         return fragment;
     }
 
@@ -50,20 +46,12 @@ public class PunchFragment extends BaseFragment {
     public void onResume() {
         super.onResume();
         chronometerPersist.resumeState();
-        if (chronometerPersist.isRunning()) {
-            fabRevealLayout.revealSecondaryView();
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_time_punch, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_time_report, container, false);
         punchButton = (CircleButton) rootView.findViewById(R.id.punch);
         punchButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -73,33 +61,6 @@ public class PunchFragment extends BaseFragment {
                 punchOnce(duration);
                 punchButton.setClickable(false);
                 fabRevealLayout.revealMainView();
-                contributionView.refreshView();
-            }
-        });
-
-        punchButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE)
-                        .setTitleText(getString(R.string.cancel_confirm_title))
-                        .setContentText(getString(R.string.cancel_confirm_content))
-                        .setConfirmText(getString(R.string.cancel_confirm))
-                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                            @Override
-                            public void onClick(SweetAlertDialog sDialog) {
-                                chronometerPersist.stopChronometer();
-                                punchButton.setClickable(false);
-                                fabRevealLayout.revealMainView();
-                                sDialog
-                                        .setTitleText(getString(R.string.canceled))
-                                        .setContentText(getString(R.string.canceled_content))
-                                        .setConfirmText(getString(R.string.canceled_ok))
-                                        .setConfirmClickListener(null)
-                                        .changeAlertType(SweetAlertDialog.SUCCESS_TYPE);
-                            }
-                        })
-                        .show();
-                return true;
             }
         });
 
@@ -116,14 +77,9 @@ public class PunchFragment extends BaseFragment {
 
             @Override
             public void onSecondaryViewAppeared(FABRevealLayout fabRevealLayout, View secondaryView) {
-                chronometerPersist.resumeState();
-                if (!chronometerPersist.isRunning()) {
-                    chronometerPersist.startChronometer();
-                }
+                chronometerPersist.startChronometer();
             }
         });
-
-        contributionView = (ContributionView) rootView.findViewById(R.id.contribution_record_punch);
         return rootView;
     }
 

@@ -12,5 +12,12 @@
     <string name="album_title">\u3000\u3000一个人越知道时间的价值，越倍觉失时的痛苦！</string>
     <string name="artist_name">--但丁</string>
     <string name="stop_instruction">点击停止，记录本次结果</string>
+    <string name="start_instruction">点击按钮，开始计时</string>
     <string name="song_title">I Appear Missing</string>
+    <string name="cancel_confirm_title">Are you sure?</string>
+    <string name="cancel_confirm_content">Won\'t be record this time!</string>
+    <string name="cancel_confirm">Yes,cancel it!</string>
+    <string name="canceled">Canceled!</string>
+    <string name="canceled_content">Your this work has been canceled!</string>
+    <string name="canceled_ok">OK</string>
 </resources>

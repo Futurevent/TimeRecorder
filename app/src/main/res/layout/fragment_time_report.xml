@@ -10,11 +10,11 @@
         android:layout_weight="1">
 
         <com.robotshell.timerecorder.view.ContributionView
-            android:id="@+id/contribution_record_punch"
+            android:id="@+id/contribution_record"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            app:display_mode="season" />
+            app:display_mode="month" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -53,14 +53,8 @@
                         android:id="@+id/artist_name_text"
                         style="@style/NameStyle"
                         android:text="@string/artist_name" />
-
                 </LinearLayout>
 
-                <TextView
-                    style="@style/NameStyle"
-                    android:layout_alignParentBottom="true"
-                    android:padding="16dp"
-                    android:text="@string/start_instruction" />
             </RelativeLayout>
 
             <RelativeLayout
