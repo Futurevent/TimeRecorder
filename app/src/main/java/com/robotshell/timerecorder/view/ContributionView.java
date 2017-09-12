@@ -39,6 +39,7 @@ public class ContributionView extends View {
      **/
     private final static int DEFAULT_BOX_COLOUR = 0xFFDDDDDD;
     private final static int DEFAULT_PADDING = 24;
+    private final static int DEFAULT_TEXT_SIZE = 8;
     /**
      * 提交次数颜色值
      **/
@@ -65,6 +66,7 @@ public class ContributionView extends View {
      * 小方格间的默认间隔
      **/
     private int boxInterval = 2;
+    private int textSixe = DEFAULT_TEXT_SIZE;
     /**
      * 所有周的列数
      **/
@@ -106,6 +108,7 @@ public class ContributionView extends View {
             a.recycle();
         }
 
+        textSixe = UIUtils.dp2sp(getContext(), DEFAULT_TEXT_SIZE);
         Log.d(TAG, "initView() called");
         mDays = DateFactory.getDays();
         //方格画笔
@@ -118,13 +121,13 @@ public class ContributionView extends View {
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
         textPaint.setColor(Color.GRAY);
-        textPaint.setTextSize(16);
+        textPaint.setTextSize(textSixe);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
         infoPaint = new Paint();
         infoPaint.setStyle(Paint.Style.FILL);
         infoPaint.setColor(0xCC888888);
-        infoPaint.setTextSize(16);
+        infoPaint.setTextSize(textSixe);
         infoPaint.setAntiAlias(true);
         //将默认值转换px
         padding = UIUtils.dp2px(getContext(), DEFAULT_PADDING);
@@ -156,7 +159,7 @@ public class ContributionView extends View {
         float viewHeight = height;
 
         if (width != 0 && width <= height) {
-            boxSide = ((int) width - (int) textPaint.measureText(weeks[0])) / (int) Math.ceil(mDays.size() / 7) - boxInterval;
+            boxSide = ((int) width - 2 * padding - (int) textPaint.measureText(weeks[0])) / (int) Math.ceil(mDays.size() / 7) - boxInterval;
             viewHeight = (2 * padding + (boxSide + boxInterval) * 7);
             if (viewHeight > height) {
                 boxSide = (int) (height / viewHeight * boxSide);
