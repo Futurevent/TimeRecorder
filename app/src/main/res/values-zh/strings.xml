@@ -10,4 +10,8 @@
     <string name="canceled">已取消</string>
     <string name="canceled_content">你的这次工作时间已被取消记录！</string>
     <string name="canceled_ok">确定</string>
+    <string name="Spring">Spring</string>
+    <string name="Summer">Summer</string>
+    <string name="Autumn">Autumn</string>
+    <string name="Winter">Winter</string>
 </resources>

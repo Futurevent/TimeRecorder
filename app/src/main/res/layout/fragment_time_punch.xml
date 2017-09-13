@@ -14,7 +14,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
-            app:display_mode="season" />
+            app:display_mode="season"
+            app:textColor="@android:color/black"
+            app:textSize="12sp"/>
     </RelativeLayout>
 
     <RelativeLayout

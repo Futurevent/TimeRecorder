@@ -1,5 +1,4 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,92 +8,17 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <com.robotshell.timerecorder.view.ContributionView
-            android:id="@+id/contribution_record"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+        <com.robotshell.timerecorder.view.CircleProgressBar
+            android:id="@+id/day_progress"
             android:layout_centerInParent="true"
-            app:display_mode="month" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
+        android:layout_weight="1">
 
-        <com.truizlop.fabreveallayout.FABRevealLayout
-            android:id="@+id/fab_reveal_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="45dp">
-
-            <android.support.design.widget.FloatingActionButton
-                style="@style/FABStyle"
-                android:src="@android:drawable/ic_media_play"
-                app:backgroundTint="@color/colorMain" />
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/album_title_text"
-                        style="@style/WisdomStyle"
-                        android:text="@string/album_title" />
-
-                    <TextView
-                        android:id="@+id/artist_name_text"
-                        style="@style/NameStyle"
-                        android:text="@string/artist_name" />
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/relativeLayout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:id="@+id/linearLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <Chronometer
-                        android:id="@+id/chronometer"
-                        style="@style/Chronometer"
-                        android:gravity="center" />
-
-                    <com.robotshell.timerecorder.view.CircleButton
-                        android:id="@+id/punch"
-                        android:layout_width="128dp"
-                        android:layout_height="128dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_weight="1"
-                        android:adjustViewBounds="false"
-                        android:scaleType="centerCrop"
-                        android:src="@android:drawable/ic_media_pause"
-                        app:cb_color="@color/fab"
-                        app:cb_pressedRingWidth="8dip" />
-
-                </LinearLayout>
-
-                <TextView
-                    style="@style/NameStyle"
-                    android:layout_alignParentBottom="true"
-                    android:padding="16dp"
-                    android:text="@string/stop_instruction" />
-            </RelativeLayout>
-        </com.truizlop.fabreveallayout.FABRevealLayout>
     </RelativeLayout>
 </LinearLayout>

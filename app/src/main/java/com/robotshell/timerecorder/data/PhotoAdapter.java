@@ -28,9 +28,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.robotshell.timerecorder.R;
+import com.robotshell.timerecorder.bean.SeasonRecord;
 import com.robotshell.timerecorder.view.ContributionView;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,11 +45,11 @@ import worldline.com.foldablelayout.FoldableLayout;
  */
 public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHolder> {
 
-    private String[] mDataSet;
+    private ArrayList<SeasonRecord> mDataSet;
     private Map<Integer, Boolean> mFoldStates = new HashMap<>();
     private Context mContext;
 
-    public PhotoAdapter(String[] dataSet, Context context) {
+    public PhotoAdapter(ArrayList<SeasonRecord> dataSet, Context context) {
         mDataSet = dataSet;
         mContext = context;
     }
@@ -59,13 +61,13 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public void onBindViewHolder(final PhotoViewHolder holder, int position) {
-        final String path = "content://com.robotshell.timerecorder/demo-pictures/" + mDataSet[position];
+        final String path = "content://com.robotshell.timerecorder/demo-pictures/" + mDataSet.get(position).album;
 
         // Bind data
         Picasso.with(holder.mFoldableLayout.getContext()).load(path).into(holder.mImageViewCover);
         Picasso.with(holder.mFoldableLayout.getContext()).load(path).into(holder.mImageViewDetail);
-        holder.mTextViewCover.setText(mDataSet[position].replace(".jpg", ""));
-
+        holder.mTextViewCover.setText(mDataSet.get(position).name);
+        holder.mContributionSeason.setSeason(mDataSet.get(position).season);
         // Bind state
         if (mFoldStates.containsKey(position)) {
             if (mFoldStates.get(position) == Boolean.TRUE) {
@@ -137,7 +139,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
 
     @Override
     public int getItemCount() {
-        return mDataSet.length;
+        return mDataSet.size();
     }
 
     protected static class PhotoViewHolder extends RecyclerView.ViewHolder {
@@ -162,7 +164,7 @@ public class PhotoAdapter extends RecyclerView.Adapter<PhotoAdapter.PhotoViewHol
         public PhotoViewHolder(FoldableLayout foldableLayout) {
             super(foldableLayout);
             mFoldableLayout = foldableLayout;
-            foldableLayout.setupViews(R.layout.list_item_cover, R.layout.list_item_detail, R.dimen.card_cover_height, itemView.getContext());
+            foldableLayout.setupViews(R.layout.record_item_cover, R.layout.record_item_detail, R.dimen.card_cover_height, itemView.getContext());
             ButterKnife.bind(this, foldableLayout);
         }
     }

@@ -11,9 +11,8 @@ import android.view.ViewGroup;
 
 import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.data.PhotoAdapter;
+import com.robotshell.timerecorder.data.SeasonRecordSet;
 import com.robotshell.timerecorder.view.ContributionView;
-
-import java.io.IOException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,13 +40,10 @@ public class RecordFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_time_record, container, false);
         ButterKnife.bind(this, rootView);
 
-        String[] dataSet = null;
-        try {
-            dataSet = getActivity().getAssets().list("demo-pictures");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        PhotoAdapter adapter = new PhotoAdapter(dataSet, getActivity());
+        SeasonRecordSet recordSet = new SeasonRecordSet(getContext());
+        recordSet.buildRecords();
+
+        PhotoAdapter adapter = new PhotoAdapter(recordSet.getSeasonRecords(), getActivity());
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override

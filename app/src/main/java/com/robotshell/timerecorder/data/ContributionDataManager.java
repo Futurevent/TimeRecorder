@@ -59,7 +59,8 @@ public class ContributionDataManager {
             }
 
             if (duration != 0) {
-                Contribution contribution = new Contribution(Contribution.TYPE_LIFE, duration);
+                Contribution contribution = new Contribution(Contribution.TYPE_LIFE,
+                        System.currentTimeMillis() - duration, duration);
                 day.addContribution(contribution);
             }
 

@@ -1,6 +1,7 @@
 package com.robotshell.timerecorder.data;
 
 import com.robotshell.timerecorder.bean.Day;
+import com.robotshell.timerecorder.utils.DataUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -55,33 +56,37 @@ public class DateFactory {
     }
 
     public static List<Day> getDays() {
+        int year = DataUtils.getCurYear();
+        return getDaysForYear(year);
+    }
+
+    public static List<Day> getDaysForYear(int year) {
         Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, 0);
         cal.set(Calendar.DATE, 1);
-        int year = cal.get(Calendar.YEAR);
         int week = cal.get(Calendar.DAY_OF_WEEK);
 
         return getDays(year, (week - 1 == 0) ? 7 : week - 1);
     }
 
-    public static List<Day> getDaysForSeason(int season) {
+    public static List<Day> getDaysForSeason(int year, int season) {
         int month = 1 + (season * 3);
 
-        Calendar cal = Calendar.getInstance();
         List<Day> days = new ArrayList<>();
-        days.addAll(getDaysForMonth(month));
-        days.addAll(getDaysForMonth(++month));
-        days.addAll(getDaysForMonth(++month));
+        days.addAll(getDaysForMonth(year, month));
+        days.addAll(getDaysForMonth(year, ++month));
+        days.addAll(getDaysForMonth(year, ++month));
 
         return days;
     }
 
-    public static List<Day> getDaysForMonth(int month) {
+    public static List<Day> getDaysForMonth(int year, int month) {
         Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, year);
         cal.set(Calendar.MONTH, month - 1);
         cal.set(Calendar.DATE, 1);
 
-        int year = cal.get(Calendar.YEAR);
         int week = cal.get(Calendar.DAY_OF_WEEK);
         week = (week - 1 == 0) ? 7 : week - 1;
 

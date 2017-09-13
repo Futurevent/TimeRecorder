@@ -30,4 +30,9 @@ public class DataUtils {
         Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.DAY_OF_MONTH);
     }
+
+    public static int getCurYear() {
+        Calendar cal = Calendar.getInstance();
+        return cal.get(Calendar.YEAR);
+    }
 }

@@ -34,6 +34,8 @@
             android:id="@+id/contribution_record_season"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:textColor="@android:color/black"
+            app:textSize="10sp"
             app:display_mode="season"/>
     </RelativeLayout>
 

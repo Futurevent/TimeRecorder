@@ -9,22 +9,25 @@ import java.io.Serializable;
 public class Contribution implements Serializable {
     public static final int TYPE_LIFE = 1;
 
-    public int Type;
-    public long time;
+    public int type;
+    public long startTime;
+    public long duration;
 
     public Contribution() {
     }
 
-    public Contribution(int type, long time) {
-        Type = type;
-        this.time = time;
+    public Contribution(int type, long startTime, long duration) {
+        this.type = type;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     @Override
     public String toString() {
         return "Contribution{" +
-                "Type=" + Type +
-                ", time=" + time +
+                "type=" + type +
+                ", startTime=" + startTime +
+                ", duration=" + duration +
                 '}';
     }
 }

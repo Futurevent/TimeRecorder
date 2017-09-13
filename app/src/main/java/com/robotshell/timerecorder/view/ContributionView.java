@@ -37,14 +37,17 @@ public class ContributionView extends View {
     /**
      * 灰色方格的默认颜色
      **/
-    private final static int DEFAULT_BOX_COLOUR = 0xFFDDDDDD;
+    private final static int DEFAULT_BOX_COLOR = 0xFFDDDDDD;
+    private final static int DEFAULT_TEXT_COLOR = Color.GRAY;
+
     private final static int DEFAULT_PADDING = 24;
     private final static int DEFAULT_TEXT_SIZE = 8;
+    private final static int DEFAULT_BOX_SIZE = 8;
     /**
      * 提交次数颜色值
      **/
     private final static int[] COLOUR_LEVEL =
-            new int[]{0xFF1E6823, 0xFF44A340, 0xFF8CC665, 0xFFD6E685, DEFAULT_BOX_COLOUR};
+            new int[]{0xFF1E6823, 0xFF44A340, 0xFF8CC665, 0xFFD6E685, DEFAULT_BOX_COLOR};
     /**
      * 星期
      **/
@@ -61,12 +64,14 @@ public class ContributionView extends View {
     /**
      * 小方格的默认边长
      **/
-    private int boxSide = 8;
+    private int boxSide = DEFAULT_BOX_SIZE;
     /**
      * 小方格间的默认间隔
      **/
     private int boxInterval = 2;
-    private int textSixe = DEFAULT_TEXT_SIZE;
+    private int textSize = DEFAULT_TEXT_SIZE;
+    private int textColor = DEFAULT_TEXT_COLOR;
+
     /**
      * 所有周的列数
      **/
@@ -85,6 +90,10 @@ public class ContributionView extends View {
     private float downY;//按下的点的Y坐标
     private Day clickDay;//按下所对应的天
 
+    private int year;
+    private int season;
+    private int month;
+
     public ContributionView(Context context) {
         this(context, null);
         Log.d(TAG, "ContributionView() called with: context = [" + context + "]");
@@ -102,32 +111,37 @@ public class ContributionView extends View {
     }
 
     public void initView(Context context, AttributeSet attrs) {
+        Log.d(TAG, "initView() called");
         if (attrs != null) {
             final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ContributionView);
             displayMode = a.getInt(R.styleable.ContributionView_display_mode, displayMode);
+            textSize = (int) a.getDimension(R.styleable.ContributionView_textSize, DEFAULT_TEXT_SIZE);
+            textColor = a.getColor(R.styleable.ContributionView_textColor, DEFAULT_TEXT_COLOR);
             a.recycle();
         }
 
-        textSixe = UIUtils.dp2sp(getContext(), DEFAULT_TEXT_SIZE);
-        Log.d(TAG, "initView() called");
-        mDays = DateFactory.getDays();
+        year = DataUtils.getCurYear();
+        season = DataUtils.getCurSeason();
+        month = DataUtils.getCurMonth();
+
+        getDaysByDisplayMode();
         //方格画笔
         boxPaint = new Paint();
         boxPaint.setStyle(Paint.Style.FILL);
         boxPaint.setStrokeWidth(1);
-        boxPaint.setColor(DEFAULT_BOX_COLOUR);
+        boxPaint.setColor(DEFAULT_BOX_COLOR);
         boxPaint.setAntiAlias(true);
         //文字画笔
         textPaint = new Paint();
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setColor(Color.GRAY);
-        textPaint.setTextSize(textSixe);
+        textPaint.setColor(textColor);
+        textPaint.setTextSize(textSize);
         textPaint.setAntiAlias(true);
         //弹出的方格信息画笔
         infoPaint = new Paint();
         infoPaint.setStyle(Paint.Style.FILL);
         infoPaint.setColor(0xCC888888);
-        infoPaint.setTextSize(textSixe);
+        infoPaint.setTextSize(textSize);
         infoPaint.setAntiAlias(true);
         //将默认值转换px
         padding = UIUtils.dp2px(getContext(), DEFAULT_PADDING);
@@ -139,10 +153,10 @@ public class ContributionView extends View {
     private void getDaysByDisplayMode() {
         switch (displayMode) {
             case DISPLAY_MODE_MONTH:
-                mDays = DateFactory.getDaysForMonth(DataUtils.getCurMonth());
+                mDays = DateFactory.getDaysForMonth(year, month);
                 break;
             case DISPLAY_MODE_SEASON:
-                mDays = DateFactory.getDaysForSeason(DataUtils.getCurSeason());
+                mDays = DateFactory.getDaysForSeason(year, season);
                 break;
             default:
                 mDays = DateFactory.getDays();
@@ -206,7 +220,6 @@ public class ContributionView extends View {
      * @param canvas 画布
      */
     private void drawBox(Canvas canvas) {
-        boxPaint.setStyle(Paint.Style.FILL);
         Log.d(TAG, "drawBox() called with: canvas = [" + canvas + "]");
         //方格的左上右下坐标
         float startX, startY, endX, endY;
@@ -214,6 +227,12 @@ public class ContributionView extends View {
         int month = mDays.get(0).month;
         for (int i = 0; i < mDays.size(); i++) {
             Day day = mDays.get(i);
+
+            if ((day.month == DataUtils.getCurMonth() && day.date > DataUtils.getCurDay())
+                    || day.month > DataUtils.getCurMonth()) {
+                boxPaint.setStyle(Paint.Style.STROKE);
+            }
+
             if (i == 0) {
                 //画1月的文本标记,坐标应该是x=padding,y=padding-boxSide/2(间隙),y坐标在表格上面一点
                 canvas.drawText(months[month - 1], padding, padding - boxSide / 2, textPaint);
@@ -242,12 +261,9 @@ public class ContributionView extends View {
             //给画笔设置当前天的颜色
             boxPaint.setColor(day.colour);
             canvas.drawRect(startX, startY, endX, endY, boxPaint);
-
-            if (day.month == DataUtils.getCurMonth() && day.date == DataUtils.getCurDay()) {
-                boxPaint.setStyle(Paint.Style.STROKE);
-            }
         }
-        boxPaint.setColor(DEFAULT_BOX_COLOUR);//恢复默认颜色
+        boxPaint.setColor(DEFAULT_BOX_COLOR);//恢复默认颜色
+        boxPaint.setStyle(Paint.Style.FILL);
     }
 
     /**
@@ -327,6 +343,21 @@ public class ContributionView extends View {
         refreshView();
     }
 
+    public void setYear(int year) {
+        this.year = year;
+        refreshView();
+    }
+
+    public void setSeason(int season) {
+        this.season = season;
+        refreshView();
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+        refreshView();
+    }
+
     public void refreshView() {
         getDaysByDisplayMode();
         invalidate();
@@ -373,7 +404,7 @@ public class ContributionView extends View {
             //绘制文字,x=leftX+文字和矩形间距,y=topY+文字和矩形上面间距+文字顶到基线高度
             canvas.drawText(popupInfo, leftX + boxSide, topY + boxSide + Math.abs(metrics.ascent), textPaint);
             clickDay = null;//重新置空，保证点击方格外信息消失
-            textPaint.setColor(Color.GRAY);//恢复画笔颜色
+            textPaint.setColor(textColor);//恢复画笔颜色
         }
     }
 

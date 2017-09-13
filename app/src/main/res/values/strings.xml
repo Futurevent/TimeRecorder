@@ -20,4 +20,8 @@
     <string name="canceled">Canceled!</string>
     <string name="canceled_content">Your this work has been canceled!</string>
     <string name="canceled_ok">OK</string>
+    <string name="Spring">Spring</string>
+    <string name="Summer">Summer</string>
+    <string name="Autumn">Autumn</string>
+    <string name="Winter">Winter</string>
 </resources>
