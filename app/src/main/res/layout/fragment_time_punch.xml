@@ -47,14 +47,14 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/album_title_text"
+                        android:id="@+id/wisdom_text"
                         style="@style/WisdomStyle"
-                        android:text="@string/album_title" />
+                        android:text="@string/wisdom" />
 
                     <TextView
-                        android:id="@+id/artist_name_text"
+                        android:id="@+id/wisdom_author"
                         style="@style/NameStyle"
-                        android:text="@string/artist_name" />
+                        android:text="@string/wisdom_author" />
 
                 </LinearLayout>
 
