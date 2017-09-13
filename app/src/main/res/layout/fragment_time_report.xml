@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -6,14 +7,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:padding="16dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:padding="16dp">
 
         <com.robotshell.timerecorder.view.CircleProgressBar
             android:id="@+id/day_progress"
-            android:layout_centerInParent="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            app:cpb_textColor="@color/color_13"
+            app:cpb_textSize="24sp" />
     </RelativeLayout>
 
     <RelativeLayout

@@ -1,6 +1,7 @@
 package com.robotshell.timerecorder.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -10,12 +11,16 @@ import android.graphics.Shader;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.robotshell.timerecorder.R;
+
 /**
  * Created by Administrator on 2017/1/10.
  * 带刻度的圆形进度条
  */
 
 public class CircleProgressBar extends View {
+    private final static int DEFAULT_TEXT_COLOR = Color.GRAY;
+    private final static int DEFAULT_TEXT_SIZE = 8;
 
     private Paint mPaint = new Paint();
     private Paint colorPaint = new Paint();
@@ -39,6 +44,9 @@ public class CircleProgressBar extends View {
     private float colorWidth = grayWidth;
     private float lineWidth = colorWidth + 5;
     private float intervalAngle = (float) (Math.PI / 180.0);
+
+    private int textSize = DEFAULT_TEXT_SIZE;
+    private int textColor = DEFAULT_TEXT_COLOR;
 
     public CircleProgressBar(Context context) {
         this(context, null);
@@ -78,6 +86,13 @@ public class CircleProgressBar extends View {
     }
 
     private void initView(AttributeSet attrs) {
+        if (attrs != null) {
+            final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.CircleProgressBar);
+            textSize = (int) a.getDimension(R.styleable.CircleProgressBar_cpb_textSize, DEFAULT_TEXT_SIZE);
+            textColor = a.getColor(R.styleable.CircleProgressBar_cpb_textColor, DEFAULT_TEXT_COLOR);
+            a.recycle();
+        }
+
         //灰色圆环画笔
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setAntiAlias(true);
@@ -94,8 +109,8 @@ public class CircleProgressBar extends View {
         linePaint.setStrokeWidth(5);
         //文字画笔
         textPaint.setAntiAlias(true);
-        textPaint.setTextSize(18);
-        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(textSize);
+        textPaint.setColor(textColor);
 
     }
 
@@ -132,6 +147,7 @@ public class CircleProgressBar extends View {
         //绘制中心进度文字
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
         float fontHeight = fontMetrics.descent - fontMetrics.ascent;
+
         String centerContent = "今年还剩" + Math.round(365 * (1 - progress / 100.0)) + "天";
         float fontWidth = textPaint.measureText(String.valueOf(centerContent));
         canvas.drawText(centerContent, -fontWidth / 2, fontHeight / 4, textPaint);

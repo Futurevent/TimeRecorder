@@ -9,8 +9,10 @@
     <string name="page_title_record">Time Record</string>
     <string name="page_title_punch">Punch The Clock</string>
     <string name="page_title_report">Time Report</string>
-    <string name="wisdom">\u3000\u3000一个人越知道时间的价值，越倍觉失时的痛苦！</string>
-    <string name="wisdom_author">--但丁</string>
+    <string name="wisdom">一个人越知道时间的价值，越倍觉失时的痛苦！</string>
+    <string name="wisdom_author">但丁</string>
+    <string name="wisdom_def">\u3000\u3000一个人越知道时间的价值，越倍觉失时的痛苦！</string>
+    <string name="wisdom_author_def">——但丁</string>
     <string name="stop_instruction">点击停止，记录本次结果</string>
     <string name="start_instruction">点击按钮，开始计时</string>
     <string name="song_title">I Appear Missing</string>

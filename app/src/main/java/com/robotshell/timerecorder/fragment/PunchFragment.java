@@ -3,24 +3,25 @@ package com.robotshell.timerecorder.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Chronometer;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.bean.Wisdom;
 import com.robotshell.timerecorder.data.ContributionDataManager;
+import com.robotshell.timerecorder.data.WisdomDataManager;
 import com.robotshell.timerecorder.view.ChronometerPersist;
 import com.robotshell.timerecorder.view.CircleButton;
 import com.robotshell.timerecorder.view.ContributionView;
 import com.truizlop.fabreveallayout.FABRevealLayout;
 import com.truizlop.fabreveallayout.OnRevealChangeListener;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class PunchFragment extends BaseFragment {
@@ -33,7 +34,23 @@ public class PunchFragment extends BaseFragment {
     private SharedPreferences sharedPreferences;
     private ContributionView contributionView;
 
+    @BindView(R.id.wisdom_text)
+    protected TextView tvWisdom;
+    @BindView(R.id.wisdom_author)
+    protected TextView tvWisdomAuthor;
+
     private ContributionDataManager contributionDataManager;
+    private WisdomDataManager wisdomDataManager;
+
+    private WisdomDataManager.GetWisdomCallback wisdomCallback = new WisdomDataManager.GetWisdomCallback() {
+        @Override
+        public void onGetWisdom(Wisdom wisdom) {
+            tvWisdom.setText("\u3000\u3000" + wisdom.wisdom);
+            if (!TextUtils.isEmpty(wisdom.author)) {
+                tvWisdomAuthor.setText("——" +wisdom.author);
+            }
+        }
+    };
 
     public PunchFragment() {
         contributionDataManager = ContributionDataManager.getInstance();
@@ -42,20 +59,8 @@ public class PunchFragment extends BaseFragment {
     @Override
     public void onAttach(final Context context) {
         super.onAttach(context);
-
+        wisdomDataManager = WisdomDataManager.getInstance(context);
         sharedPreferences = context.getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
-        //查找Person表里面id为6b6c11c537的数据
-        BmobQuery<Wisdom> bmobQuery = new BmobQuery<Wisdom>();
-        bmobQuery.getObject("e0siJJJS", new QueryListener<Wisdom>() {
-            @Override
-            public void done(Wisdom object, BmobException e) {
-                if (e == null) {
-                    Toast.makeText(context, "查询成功", Toast.LENGTH_LONG).show();
-                } else {
-                    Toast.makeText(context, "查询失败", Toast.LENGTH_LONG).show();
-                }
-            }
-        });
     }
 
     public static PunchFragment newInstance() {
@@ -81,6 +86,10 @@ public class PunchFragment extends BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_time_punch, container, false);
+        ButterKnife.bind(this, rootView);
+
+        wisdomDataManager.randomWisdom(wisdomCallback);
+
         punchButton = (CircleButton) rootView.findViewById(R.id.punch);
         punchButton.setOnClickListener(new View.OnClickListener() {
             @Override
