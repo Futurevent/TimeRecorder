@@ -21,18 +21,24 @@ public class CircleProgressBar extends View {
     private Paint colorPaint = new Paint();
     private Paint linePaint = new Paint();
     private Paint textPaint = new Paint();
-    private int[] colors =  new int[]{Color.GREEN, Color.parseColor("#fe751a"), Color.parseColor("#13be23"), Color.GREEN};
-//    private int[] colors =  new int[]{Color.GREEN, Color.parseColor("#fe751a"), Color.parseColor("#13be23"), Color.GREEN};
+    private int[] colors = new int[]{Color.GREEN,
+            Color.parseColor("#EF9A9A"),
+            Color.parseColor("#4A148C"),
+            Color.parseColor("#26A69A"),
+            Color.parseColor("#FFEB3B"),
+            Color.parseColor("#FF5722"),
+            Color.parseColor("#99CC00"),
+            Color.GREEN};
     private Shader mGradient;
     private float centerX, centerY;
     private float radius;
     private int progress = 0;
-//  默认的padding值
+    //  默认的padding值
     private float padding = 20;
     private float grayWidth = 30;
     private float colorWidth = grayWidth;
-    private float lineWidth = colorWidth+5;
-    private float intervalAngle = (float) (Math.PI/180.0);
+    private float lineWidth = colorWidth + 5;
+    private float intervalAngle = (float) (Math.PI / 180.0);
 
     public CircleProgressBar(Context context) {
         this(context, null);
@@ -88,7 +94,7 @@ public class CircleProgressBar extends View {
         linePaint.setStrokeWidth(5);
         //文字画笔
         textPaint.setAntiAlias(true);
-        textPaint.setTextSize(50);
+        textPaint.setTextSize(18);
         textPaint.setColor(Color.BLACK);
 
     }
@@ -97,7 +103,7 @@ public class CircleProgressBar extends View {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         centerX = (w - getPaddingLeft() - getPaddingRight()) / 2;
         centerY = (h - getPaddingTop() - getPaddingBottom()) / 2;
-        radius = centerX-padding;//让圆的半径填充一个默认padding
+        radius = centerX - padding;//让圆的半径填充一个默认padding
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
@@ -107,37 +113,39 @@ public class CircleProgressBar extends View {
         canvas.save();
         //绘制灰色圆环
         canvas.translate(centerX, centerY);
-        RectF rectF = new RectF(-radius,-radius,radius,radius);
-        canvas.drawArc(rectF,-90,360,false,mPaint);
+        RectF rectF = new RectF(-radius, -radius, radius, radius);
+        canvas.drawArc(rectF, -90, 360, false, mPaint);
         //绘制渐变色圆环
-        if (mGradient == null){//线性渐变着色器
-            mGradient = new LinearGradient(-radius,-radius,radius,radius,colors,null, Shader.TileMode.CLAMP);
+        if (mGradient == null) {//线性渐变着色器
+            mGradient = new LinearGradient(-radius, -radius, radius, radius, colors, null, Shader.TileMode.CLAMP);
         }
         colorPaint.setShader(mGradient);
-        canvas.drawArc(rectF,-90, (float) ((progress/100.0)*360),false,colorPaint);
+        canvas.drawArc(rectF, -90, (float) ((progress / 100.0) * 360), false, colorPaint);
         //绘制白色分割条，100条白色线段，每个间隔3.6度
-        for (float i = 0;i<360;i+=3.6){
-            float startX = (float) ((radius+grayWidth)*Math.cos(i*intervalAngle));
-            float startY = (float) ((radius+grayWidth)*Math.sin(i*intervalAngle));
-            float stopX = (float) ((radius-grayWidth)*Math.cos(i*intervalAngle));
-            float stopY = (float) ((radius-grayWidth)*Math.sin(i*intervalAngle));
-            canvas.drawLine(startX,startY,stopX,stopY,linePaint);
+        for (float i = 0; i < 360; i += 3.6) {
+            float startX = (float) ((radius + grayWidth) * Math.cos(i * intervalAngle));
+            float startY = (float) ((radius + grayWidth) * Math.sin(i * intervalAngle));
+            float stopX = (float) ((radius - grayWidth) * Math.cos(i * intervalAngle));
+            float stopY = (float) ((radius - grayWidth) * Math.sin(i * intervalAngle));
+            canvas.drawLine(startX, startY, stopX, stopY, linePaint);
         }
         //绘制中心进度文字
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
         float fontHeight = fontMetrics.descent - fontMetrics.ascent;
-        float fontWidth = textPaint.measureText(progress + "%");
-        canvas.drawText(progress+"%",-fontWidth/2,fontHeight/4,textPaint);
+        String centerContent = "今年还剩" + Math.round(365 * (1 - progress / 100.0)) + "天";
+        float fontWidth = textPaint.measureText(String.valueOf(centerContent));
+        canvas.drawText(centerContent, -fontWidth / 2, fontHeight / 4, textPaint);
         canvas.restore();
     }
 
     /**
      * 设置当前进度
+     *
      * @param progress 进度值，0<=progress<=100
      */
-    public void setProgress(int progress){
-        if (progress<=0)progress=0;
-        if (progress>=100)progress=100;
+    public void setProgress(int progress) {
+        if (progress <= 0) progress = 0;
+        if (progress >= 100) progress = 100;
         this.progress = progress;
         invalidate();
     }

@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.view.CircleProgressBar;
 
+import java.util.Calendar;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -20,14 +22,16 @@ public class ReportFragment extends BaseFragment {
     @BindView(R.id.day_progress)
     protected CircleProgressBar dayProgress;
 
+    private int pastDayProgress = 0;
+
     private int progress = 0;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if (msg.what == Integer.MAX_VALUE) {
                 progress++;
-                if (progress >= 80) {
-                    progress = 80;
+                if (progress >= pastDayProgress) {
+                    progress = pastDayProgress;
                     dayProgress.setProgress(progress);
                     removeCallbacksAndMessages(null);
                 } else {
@@ -63,12 +67,15 @@ public class ReportFragment extends BaseFragment {
         View rootView = inflater.inflate(R.layout.fragment_time_report, container, false);
         ButterKnife.bind(this, rootView);
 
-        mHandler.sendEmptyMessageDelayed(Integer.MAX_VALUE, 200);
-
         return rootView;
     }
 
     @Override
     public void refreshFragment() {
+        Calendar calendar = Calendar.getInstance();
+        int day = calendar.get(Calendar.DAY_OF_YEAR);
+        pastDayProgress = day * 100 / 365;
+        progress = 0;
+        mHandler.sendEmptyMessageDelayed(Integer.MAX_VALUE, 200);
     }
 }
