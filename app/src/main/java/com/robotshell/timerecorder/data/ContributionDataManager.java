@@ -9,6 +9,7 @@ import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -18,6 +19,7 @@ import java.util.Date;
 public class ContributionDataManager {
     private static final String DB_NAME = "days";
     private static final String TIME_FORMAT = "yyyy-MM-dd";
+    private static final String TIME_STRING_FORMAT = "%d-%02d-%02d";
 
     private DB daysDB;
     private Context context;
@@ -89,5 +91,23 @@ public class ContributionDataManager {
         } else {
             return 0;
         }
+    }
+
+    public Day getToday() {
+        Calendar cal = Calendar.getInstance();
+        Day day = new Day();
+        day.year = cal.get(Calendar.YEAR);
+        day.month = cal.get(Calendar.MONTH) + 1;
+        day.date = cal.get(Calendar.DAY_OF_MONTH);
+        day.time = String.format(TIME_STRING_FORMAT, day.year, day.month, day.date);
+        try {
+            if (daysDB.exists(day.time)) {
+                day = daysDB.getObject(day.time, Day.class);
+            }
+        } catch (SnappydbException e) {
+            e.printStackTrace();
+        }
+
+        return day;
     }
 }

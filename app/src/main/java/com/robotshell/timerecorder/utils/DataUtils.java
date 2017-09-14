@@ -35,4 +35,13 @@ public class DataUtils {
         Calendar cal = Calendar.getInstance();
         return cal.get(Calendar.YEAR);
     }
+
+    public static long getTodayMillis() {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        long todayMillis = cal.getTimeInMillis();
+        return todayMillis;
+    }
 }

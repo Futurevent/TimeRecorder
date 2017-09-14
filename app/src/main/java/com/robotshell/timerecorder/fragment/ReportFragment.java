@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.view.CircleProgressBar;
+import com.robotshell.timerecorder.view.DayBar;
 
 import java.util.Calendar;
 
@@ -21,6 +22,8 @@ public class ReportFragment extends BaseFragment {
 
     @BindView(R.id.day_progress)
     protected CircleProgressBar dayProgress;
+    @BindView(R.id.today_bar)
+    protected DayBar todayBar;
 
     private int pastDayProgress = 0;
 
@@ -66,7 +69,6 @@ public class ReportFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_time_report, container, false);
         ButterKnife.bind(this, rootView);
-
         return rootView;
     }
 
@@ -77,5 +79,7 @@ public class ReportFragment extends BaseFragment {
         pastDayProgress = day * 100 / 365;
         progress = 0;
         mHandler.sendEmptyMessageDelayed(Integer.MAX_VALUE, 200);
+
+        todayBar.invalidate();
     }
 }

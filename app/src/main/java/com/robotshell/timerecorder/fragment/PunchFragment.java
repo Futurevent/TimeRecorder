@@ -3,6 +3,7 @@ package com.robotshell.timerecorder.fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,8 +95,8 @@ public class PunchFragment extends BaseFragment {
         punchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                long duration = SystemClock.elapsedRealtime() - chronometer.getBase();
                 chronometerPersist.stopChronometer();
-                long duration = chronometer.getBase();
                 punchOnce(duration);
                 punchButton.setClickable(false);
                 fabRevealLayout.revealMainView();
