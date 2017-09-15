@@ -13,6 +13,8 @@ import android.view.View;
 
 import com.robotshell.timerecorder.R;
 
+import java.util.Calendar;
+
 /**
  * Created by Administrator on 2017/1/10.
  * 带刻度的圆形进度条
@@ -147,8 +149,8 @@ public class CircleProgressBar extends View {
         //绘制中心进度文字
         Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
         float fontHeight = fontMetrics.descent - fontMetrics.ascent;
-
-        String centerContent = "今年还剩" + Math.round(365 * (1 - progress / 100.0)) + "天";
+        Calendar cal = Calendar.getInstance();
+        String centerContent = "今年还剩" + (365 - cal.get(Calendar.DAY_OF_YEAR)) + "天";
         float fontWidth = textPaint.measureText(String.valueOf(centerContent));
         canvas.drawText(centerContent, -fontWidth / 2, fontHeight / 4, textPaint);
         canvas.restore();

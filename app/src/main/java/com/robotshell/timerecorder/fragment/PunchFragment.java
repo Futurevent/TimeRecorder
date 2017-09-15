@@ -2,6 +2,7 @@ package com.robotshell.timerecorder.fragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -90,6 +91,9 @@ public class PunchFragment extends BaseFragment {
         ButterKnife.bind(this, rootView);
 
         wisdomDataManager.randomWisdom(wisdomCallback);
+        Typeface typeFace = Typeface.createFromAsset(getContext().getAssets(), "font/font.TTF");
+        tvWisdom.setTypeface(typeFace);
+        tvWisdomAuthor.setTypeface(typeFace);
 
         punchButton = (CircleButton) rootView.findViewById(R.id.punch);
         punchButton.setOnClickListener(new View.OnClickListener() {

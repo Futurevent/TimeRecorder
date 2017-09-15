@@ -26,4 +26,5 @@
     <string name="Summer">Summer</string>
     <string name="Autumn">Autumn</string>
     <string name="Winter">Winter</string>
+    <string name="report_template">今天是%1$d年%2$d月%3$d日，\n今年已经过去了%4$d天，\n今天你记录了%5$d分钟你认为对你有意义时间，\n继续努力吧，记录时间管理生命！</string>
 </resources>

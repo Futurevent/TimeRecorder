@@ -27,8 +27,21 @@
 
         <com.robotshell.timerecorder.view.DayBar
             android:id="@+id/today_bar"
-            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/today_bar"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/report_content"
+                android:layout_width="match_parent"
+                android:textSize="16sp"
+                android:layout_height="wrap_content" />
+        </ScrollView>
     </RelativeLayout>
 </LinearLayout>

@@ -1,16 +1,20 @@
 package com.robotshell.timerecorder.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.robotshell.timerecorder.R;
+import com.robotshell.timerecorder.data.ContributionDataManager;
 import com.robotshell.timerecorder.view.CircleProgressBar;
 import com.robotshell.timerecorder.view.DayBar;
+import com.robotshell.timerecorder.view.FadeinTextViewHelper;
 
 import java.util.Calendar;
 
@@ -24,6 +28,9 @@ public class ReportFragment extends BaseFragment {
     protected CircleProgressBar dayProgress;
     @BindView(R.id.today_bar)
     protected DayBar todayBar;
+    @BindView(R.id.report_content)
+    protected TextView reportContent;
+    private FadeinTextViewHelper fadeinTextViewHelper;
 
     private int pastDayProgress = 0;
 
@@ -69,6 +76,12 @@ public class ReportFragment extends BaseFragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_time_report, container, false);
         ButterKnife.bind(this, rootView);
+
+        Typeface typeFace = Typeface.createFromAsset(getContext().getAssets(), "font/font.TTF");
+        reportContent.setTypeface(typeFace);
+        fadeinTextViewHelper = new FadeinTextViewHelper(reportContent,
+                ContributionDataManager.getInstance().getReprotContent(), 200);
+        fadeinTextViewHelper.startTv(1);
         return rootView;
     }
 
@@ -81,5 +94,9 @@ public class ReportFragment extends BaseFragment {
         mHandler.sendEmptyMessageDelayed(Integer.MAX_VALUE, 200);
 
         todayBar.invalidate();
+
+        reportContent.setText("");
+        fadeinTextViewHelper.setText(ContributionDataManager.getInstance().getReprotContent());
+        fadeinTextViewHelper.startTv(1);
     }
 }

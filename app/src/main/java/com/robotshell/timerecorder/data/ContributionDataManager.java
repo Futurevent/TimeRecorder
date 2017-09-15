@@ -2,6 +2,7 @@ package com.robotshell.timerecorder.data;
 
 import android.content.Context;
 
+import com.robotshell.timerecorder.R;
 import com.robotshell.timerecorder.bean.Contribution;
 import com.robotshell.timerecorder.bean.Day;
 import com.snappydb.DB;
@@ -9,6 +10,7 @@ import com.snappydb.DBFactory;
 import com.snappydb.SnappydbException;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -109,5 +111,18 @@ public class ContributionDataManager {
         }
 
         return day;
+    }
+
+    public String getReprotContent() {
+        Day day = getToday();
+        ArrayList<Contribution> contributions = day.contributions;
+        int minutes = 0;
+        for (Contribution contribution : contributions) {
+            minutes += Math.ceil(contribution.duration / 1000 / 60);
+        }
+
+        String template = context.getString(R.string.report_template);
+        Calendar cal = Calendar.getInstance();
+        return String.format(template, day.year, day.month, day.date, cal.get(Calendar.DAY_OF_YEAR), minutes);
     }
 }
