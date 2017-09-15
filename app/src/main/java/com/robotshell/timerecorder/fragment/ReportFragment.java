@@ -97,6 +97,7 @@ public class ReportFragment extends BaseFragment {
 
         reportContent.setText("");
         fadeinTextViewHelper.setText(ContributionDataManager.getInstance().getReprotContent());
+        fadeinTextViewHelper.setText("");
         fadeinTextViewHelper.startTv(1);
     }
 }
